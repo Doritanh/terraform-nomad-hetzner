@@ -136,7 +136,9 @@ apt:
 package_update: true
 package_upgrade: true
 packages:
-  - docker
+  - docker-ce
+  - docker-ce-cli 
+  - containerd.io
   - nomad
 write_files:
 - content: |
@@ -144,11 +146,17 @@ write_files:
 
     data_dir = "/opt/nomad/data"
     bind_addr = "0.0.0.0"
-    datacenter = "dc1"
+    datacenter = "${datacenter_name}"
+
+    advertise {
+      http = "${private_ip}"
+      rpc  = "${private_ip}"
+      serf = "${private_ip}"
+    }
     
     client {
       enabled = true
-      servers = ["10.0.1.1:4647", "10.0.1.2:4647", "10.0.1.3:4647"]
+      servers = ${servers}
     }
   path: /etc/nomad.d/nomad.hcl
   owner: root:root

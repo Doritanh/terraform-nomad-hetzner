@@ -1,20 +1,29 @@
-data "template_file" "server_init" {
+# Template for the cloudinit file
+data "template_file" "server_cloudinit_template" {
+  for_each = var.nomad_servers
+
   template = file("${path.module}/files/cloudinit_server.tpl")
 
   vars = {
-    hcloud_token = "${var.hcloud_token}"
+    hcloud_token     = "${var.hcloud_token}"
+    private_ip       = "${each.value.private_ip}"
+    retry_join       = "${jsonencode([for k, v in var.nomad_servers : "${v.private_ip}:4648"])}"
+    bootstrap_expect = "${length(var.nomad_servers)}"
+    datacenter_name  = "${var.datacenter_name}"
   }
 }
 
-data "template_cloudinit_config" "server_config" {
+# Transform the cloudinit template
+data "template_cloudinit_config" "server_cloudinit" {
+  for_each = var.nomad_servers
+
   gzip          = true
   base64_encode = true
 
-  # Main cloud-config configuration file.
   part {
     filename     = "init.cfg"
     content_type = "text/cloud-config"
-    content      = data.template_file.server_init.rendered
+    content      = data.template_file.server_cloudinit_template[each.key].rendered
   }
 
   part {
@@ -28,6 +37,7 @@ data "template_cloudinit_config" "server_config" {
   }
 }
 
+# Define servers
 resource "hcloud_server" "server" {
   for_each = var.nomad_servers
 
@@ -36,9 +46,9 @@ resource "hcloud_server" "server" {
   image       = "ubuntu-22.04"
   server_type = each.value.server_type
   ssh_keys    = [
-    for obj in hcloud_ssh_key.ssh : obj.id
+    for key in hcloud_ssh_key.ssh : key.id
   ]
-  user_data   = data.template_cloudinit_config.server_config.rendered
+  user_data   = data.template_cloudinit_config.server_cloudinit[each.key].rendered
 
   public_net {
     ipv4_enabled = each.value.ipv4_enabled

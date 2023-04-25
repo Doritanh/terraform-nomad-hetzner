@@ -1,20 +1,28 @@
-data "template_file" "worker_init" {
-  template = file("${path.module}/files/cloudinit_worker.tpl")
+# Template for the cloudinit file
+data "template_file" "client_cloudinit_template" {
+  for_each = var.nomad_clients
+
+  template = file("${path.module}/files/cloudinit_client.tpl")
 
   vars = {
-    hcloud_token = "${var.hcloud_token}"
+    hcloud_token    = "${var.hcloud_token}"
+    private_ip      = "${each.value.private_ip}"
+    servers         = "${jsonencode([for k, v in var.nomad_servers : "${v.private_ip}:4647"])}"
+    datacenter_name = "${var.datacenter_name}"
   }
 }
 
-data "template_cloudinit_config" "worker_config" {
+# Transform the cloudinit template
+data "template_cloudinit_config" "client_cloudinit" {
+  for_each = var.nomad_clients
+
   gzip          = true
   base64_encode = true
 
-  # Main cloud-config configuration file.
   part {
     filename     = "init.cfg"
     content_type = "text/cloud-config"
-    content      = data.template_file.worker_init.rendered
+    content      = data.template_file.client_cloudinit_template[each.key].rendered
   }
 
   part {
@@ -28,17 +36,18 @@ data "template_cloudinit_config" "worker_config" {
   }
 }
 
-resource "hcloud_server" "worker" {
-  for_each = var.nomad_workers
+# Define clients
+resource "hcloud_server" "client" {
+  for_each = var.nomad_clients
 
   name        = each.key
   datacenter  = each.value.datacenter
   image       = "ubuntu-22.04"
   server_type = each.value.server_type
   ssh_keys    = [
-    for obj in hcloud_ssh_key.ssh : obj.id
+    for key in hcloud_ssh_key.ssh : key.id
   ]
-  user_data   = data.template_cloudinit_config.worker_config.rendered
+  user_data   = data.template_cloudinit_config.client_cloudinit[each.key].rendered
 
   public_net {
     ipv4_enabled = each.value.ipv4_enabled

@@ -1,16 +1,3 @@
-terraform {
-  required_providers {
-    hcloud = {
-      source  = "hetznercloud/hcloud"
-      version = "1.38.2"
-    }
-    template = {
-      source  = "hashicorp/template"
-      version = "2.2.0"
-    }
-  }
-}
-
 # Configure the hcloud token.
 # This will allow to access the hcloud project.
 provider "hcloud" {
@@ -26,14 +13,14 @@ resource "hcloud_ssh_key" "ssh" {
 
 resource "hcloud_network" "net" {
   name     = "Nomad Network"
-  ip_range = "10.0.0.0/16"
+  ip_range = "10.0.0.0/8"
 }
 
 resource "hcloud_network_subnet" "net" {
   network_id   = hcloud_network.net.id
   type         = "server"
   network_zone = "eu-central"
-  ip_range     = "10.0.0.0/16"
+  ip_range     = "10.0.0.0/8"
 }
 
 resource "hcloud_firewall" "firewall" {

@@ -78,13 +78,19 @@ write_files:
 
     data_dir = "/opt/nomad/data"
     bind_addr = "0.0.0.0"
-    datacenter = "dc1"
+    datacenter = "${datacenter_name}"
+
+    advertise {
+      http = "0.0.0.0"
+      rpc  = "${private_ip}"
+      serf = "${private_ip}"
+    }
     
     server {
       enabled = true
-      bootstrap_expect = 3
+      bootstrap_expect = ${bootstrap_expect}
       server_join {
-        retry_join = ["10.0.1.1:4648", "10.0.1.2:4648", "10.0.1.3:4648"]
+        retry_join = ${retry_join}
       }
 
     }
