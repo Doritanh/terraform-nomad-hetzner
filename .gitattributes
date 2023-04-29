@@ -1,0 +1,2 @@
+# Exclude all .tpl cloud init files from linguist, since it's considered as smarty
+*.tpl -linguist-language

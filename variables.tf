@@ -24,6 +24,26 @@ variable "nomad_servers" {
     ipv4_enabled = bool
   }))
   description = "List of the nomad servers"
+  default = {
+    "server-1" = {
+      datacenter   = "fsn1-dc14"
+      server_type  = "cax11"
+      private_ip   = "10.1.0.1"
+      ipv4_enabled = true
+    },
+    "server-2" = {
+      datacenter   = "fsn1-dc14"
+      server_type  = "cax11"
+      private_ip   = "10.1.0.2"
+      ipv4_enabled = true
+    },
+    "server-3" = {
+      datacenter   = "fsn1-dc14"
+      server_type  = "cax11"
+      private_ip   = "10.1.0.3"
+      ipv4_enabled = true
+    }
+  }
 }
 
 variable "nomad_clients" {
@@ -34,4 +54,5 @@ variable "nomad_clients" {
     ipv4_enabled = bool
   }))
   description = "List of the nomad clients"
+  default = {}
 }
