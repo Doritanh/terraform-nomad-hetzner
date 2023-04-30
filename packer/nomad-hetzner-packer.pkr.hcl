@@ -4,42 +4,44 @@ variable hcloud_token {
   type = string
 }
 
-source "hcloud" "ubuntu_22_04_arm64" {
+source "hcloud" "nomad_arm64" {
   communicator  = "ssh"
-  image         = "ubuntu-22.04"
+  image         = "debian-11"
   location      = "fsn1"
   server_type   = "cax11"
   ssh_username  = "root"
   token         = var.hcloud_token
-  snapshot_name = "nomad-ubuntu-22-arm64"
+  snapshot_name = "nomad-arm64"
   snapshot_labels = {
-    "name": "nomad-ubuntu-22-arm64"
+    "name": "nomad-arm64"
   }
 }
 
-source "hcloud" "ubuntu_22_04_x86" {
+source "hcloud" "nomad_x86" {
   communicator  = "ssh"
-  image         = "ubuntu-22.04"
+  image         = "debian-11"
   location      = "fsn1"
   server_type   = "cx11"
   ssh_username  = "root"
   token         = var.hcloud_token
-  snapshot_name = "nomad-ubuntu-22-x86"
+  snapshot_name = "nomad-x86"
   snapshot_labels = {
-    "name": "nomad-ubuntu-22-x86"
+    "name": "nomad-x86"
   }
 }
 
 build {
-  sources = ["source.hcloud.ubuntu_22_04_arm64", "source.hcloud.ubuntu_22_04_x86"]
+  sources = ["source.hcloud.nomad_arm64", "source.hcloud.nomad_x86"]
 
   provisioner "shell" {
     inline = [
       "apt-get update && apt-get -y upgrade",
-      "apt-get -y install wget gpg coreutils",
+      "apt-get -y install wget gnupg coreutils ca-certificates",
       "wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg",
-      "echo 'deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com jammy main' | tee /etc/apt/sources.list.d/hashicorp.list",
-      "apt-get update && apt-get -y install nomad",
+      "wget -O- https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker.gpg",
+      "echo 'deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com bullseye main' | tee /etc/apt/sources.list.d/hashicorp.list",
+      "echo 'deb [signed-by=/usr/share/keyrings/docker.gpg] https://download.docker.com/linux/debian bullseye stable' | tee /etc/apt/sources.list.d/docker.list",
+      "apt-get update && apt-get -y install docker-ce docker-ce-cli containerd.io nomad",
       "cd /etc/nomad.d/ && nomad tls ca create"
     ]
   }

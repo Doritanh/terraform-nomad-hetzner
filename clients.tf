@@ -42,7 +42,7 @@ resource "hcloud_server" "client" {
 
   name        = each.key
   datacenter  = each.value.datacenter
-  image       = "ubuntu-22.04"
+  image       = substr(each.value.server_type, 0, 3) == "cax" ? data.hcloud_image.nomad_arm64_snapshot.id : data.hcloud_image.nomad_x86_snapshot.id
   server_type = each.value.server_type
   ssh_keys    = [
     for key in hcloud_ssh_key.ssh : key.id

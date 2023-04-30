@@ -1,15 +1,3 @@
-data "hcloud_image" "ubuntu_22_04_arm64_snapshot" {
-  with_selector = "name==nomad-ubuntu-22-arm64"
-  with_architecture = "arm"
-  most_recent   = true
-}
-
-data "hcloud_image" "ubuntu_22_04_x86_snapshot" {
-  with_selector = "name==nomad-ubuntu-22-x86"
-  with_architecture = "x86"
-  most_recent   = true
-}
-
 # Template for the cloudinit file
 data "template_file" "server_cloudinit_template" {
   for_each = var.nomad_servers
@@ -55,7 +43,7 @@ resource "hcloud_server" "server" {
 
   name        = each.key
   datacenter  = each.value.datacenter
-  image       = substr(each.value.server_type, 0, 3) == "cax" ? data.hcloud_image.ubuntu_22_04_arm64_snapshot.id : data.hcloud_image.ubuntu_22_04_x86_snapshot.id 
+  image       = substr(each.value.server_type, 0, 3) == "cax" ? data.hcloud_image.nomad_arm64_snapshot.id : data.hcloud_image.nomad_x86_snapshot.id 
   server_type = each.value.server_type
   ssh_keys    = [
     for key in hcloud_ssh_key.ssh : key.id
