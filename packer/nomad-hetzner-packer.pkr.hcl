@@ -42,7 +42,11 @@ build {
       "echo 'deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com bullseye main' | tee /etc/apt/sources.list.d/hashicorp.list",
       "echo 'deb [signed-by=/usr/share/keyrings/docker.gpg] https://download.docker.com/linux/debian bullseye stable' | tee /etc/apt/sources.list.d/docker.list",
       "apt-get update && apt-get -y install docker-ce docker-ce-cli containerd.io nomad",
-      "cd /etc/nomad.d/ && nomad tls ca create"
+      "cd /etc/nomad.d/ && nomad tls ca create && nomad tls cert create -cli",
+      "echo 'NOMAD_ADDR=https://localhost:4646' >> /etc/profile",
+      "echo 'NOMAD_CACERT=nomad-agent-ca.pem' >> /etc/profile",
+      "echo 'NOMAD_CLIENT_CERT=global-cli-nomad.pem' >> /etc/profile",
+      "echo 'NOMAD_CLIENT_KEY=global-cli-nomad-key.pem' >> /etc/profile"
     ]
   }
 }
