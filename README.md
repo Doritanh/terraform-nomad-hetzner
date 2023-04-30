@@ -1,5 +1,21 @@
-# terraform-nomad-hetzner
-This repository contains Terraform code to easily deploy a Nomad infrastructure on Hetzner. Use this code to deploy and manage your Nomad cluster on Hetzner with ease.
+<div align="center">
+  <h3 align="center">Nomad Hetzner</h3>
+
+  <p align="center">
+    This repository contains Terraform code to easily deploy a Nomad infrastructure on Hetzner.
+    Use this code to deploy and manage your Nomad cluster on Hetzner with ease.
+    <br />
+    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    ·
+    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+  </p>
+</div>
+
 
 ## About the Project
 
@@ -43,9 +59,6 @@ terraform apply
 ```
 
 If you want to destroy anything, you can run `terraform destroy`.
-
-# Authors
-- @Doritanh
 
 # Licence
 This repository is licensed under the MIT license. See the LICENSE file for more information.
