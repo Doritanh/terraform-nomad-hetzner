@@ -5,14 +5,12 @@
     This repository contains Terraform code to easily deploy a Nomad infrastructure on Hetzner.
     Use this code to deploy and manage your Nomad cluster on Hetzner with ease.
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/nomad-hetzner/terraform-nomad-hetzner"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="https://github.com/nomad-hetzner/terraform-nomad-hetzner/issues">Report Bug</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+    <a href="https://github.com/nomad-hetzner/terraform-nomad-hetzner/issues">Request Feature</a>
   </p>
 </div>
 
