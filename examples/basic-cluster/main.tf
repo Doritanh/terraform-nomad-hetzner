@@ -5,7 +5,7 @@ module "nomad-hetzner" {
   hcloud_token = ""
 
   # Put your ssh keys
-  ssh_keys = ["<your ssh public key>"]
+  ssh_public_keys = ["<your ssh public keys>"]
 
   # This is a simple configuration for nomad servers.
   nomad_servers = {

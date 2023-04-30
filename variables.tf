@@ -4,7 +4,7 @@ variable "hcloud_token" {
   sensitive   = true
 }
 
-variable "ssh_keys" {
+variable "ssh_public_keys" {
   type        = list(string)
   description = "List of SSH keys"
   default     = []

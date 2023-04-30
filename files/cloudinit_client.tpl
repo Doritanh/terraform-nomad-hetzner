@@ -19,7 +19,7 @@ write_files:
     }
     
     tls {
-      http = false
+      http = true
       rpc  = true
 
       ca_file   = "/etc/nomad.d/nomad-agent-ca.pem"

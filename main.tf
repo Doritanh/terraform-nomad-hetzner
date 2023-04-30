@@ -6,9 +6,9 @@ provider "hcloud" {
 
 # Create the SSH keys
 resource "hcloud_ssh_key" "ssh" {
-  count      = length(var.ssh_keys)
+  count      = length(var.ssh_public_keys)
   name       = count.index
-  public_key = var.ssh_keys[count.index]
+  public_key = var.ssh_public_keys[count.index]
 }
 
 resource "hcloud_network" "net" {
