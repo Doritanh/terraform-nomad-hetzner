@@ -5,11 +5,14 @@ data "template_file" "server_cloudinit_template" {
   template = file("${path.module}/files/cloudinit_server.tpl")
 
   vars = {
-    hcloud_token     = "${var.hcloud_token}"
-    private_ip       = "${each.value.private_ip}"
-    retry_join       = "${jsonencode([for k, v in var.nomad_servers : "${v.private_ip}:4648"])}"
-    bootstrap_expect = "${length(var.nomad_servers)}"
-    datacenter_name  = "${var.datacenter_name}"
+    hcloud_token           = "${var.hcloud_token}"
+    private_ip             = "${each.value.private_ip}"
+    retry_join             = "${jsonencode([for k, v in var.nomad_servers : "${v.private_ip}:4648"])}"
+    bootstrap_expect       = "${length(var.nomad_servers)}"
+    datacenter_name        = "${var.datacenter_name}"
+    verify_server_hostname = "${var.verify_server_hostname}"
+    verify_https_client    = "${var.verify_https_client}"
+    client_enabled         = "${each.value.client_enabled}"
   }
 }
 

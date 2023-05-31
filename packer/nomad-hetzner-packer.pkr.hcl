@@ -43,6 +43,7 @@ build {
       "echo 'deb [signed-by=/usr/share/keyrings/docker.gpg] https://download.docker.com/linux/debian bullseye stable' | tee /etc/apt/sources.list.d/docker.list",
       "apt-get update && apt-get -y install docker-ce docker-ce-cli containerd.io nomad",
       "cd /etc/nomad.d/ && nomad tls ca create && nomad tls cert create -cli",
+      "openssl pkcs12 -export -inkey ./global-cli-nomad-key.pem -in ./global-cli-nomad.pem -out ./nomad.p12",
       "echo 'NOMAD_ADDR=https://localhost:4646' >> /etc/environment",
       "echo 'NOMAD_CACERT=/etc/nomad.d/nomad-agent-ca.pem' >> /etc/environment",
       "echo 'NOMAD_CLIENT_CERT=/etc/nomad.d/global-cli-nomad.pem' >> /etc/environment",

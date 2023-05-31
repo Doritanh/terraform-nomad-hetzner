@@ -29,9 +29,17 @@ write_files:
       cert_file = "/etc/nomad.d/global-server-nomad.pem"
       key_file  = "/etc/nomad.d/global-server-nomad-key.pem"
 
-      verify_server_hostname = true
-      verify_https_client    = true
+      verify_server_hostname = ${verify_server_hostname}
+      verify_https_client    = ${verify_https_client}
     }
+
+    %{ if client_enabled == "true"}
+    client {
+      enabled = true
+      servers = ["${private_ip}:4647"]
+    }
+    %{ endif }
+
   path: /etc/nomad.d/nomad.hcl
   owner: root:root
 runcmd:
